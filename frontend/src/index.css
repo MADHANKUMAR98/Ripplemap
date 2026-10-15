@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 11 17 32;
+    --surface: 22 32 50;
+    --surface-elevated: 30 41 59;
+    --border: 51 65 85;
+    --primary: 6 182 212;
+  }
+}
+
+/* Custom Scrollbar for sleek command center UI */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B1120;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #06B6D4;
+}
+
+/* React Flow Dark Canvas overrides */
+.react-flow__pane {
+  background-color: #0B1120 !important;
+}
+
+.react-flow__background {
+  background-color: #0B1120 !important;
+}
+
+.react-flow__controls {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid #334155 !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background: #162032 !important;
+  border-bottom: 1px solid #334155 !important;
+  color: #94A3B8 !important;
+  fill: #94A3B8 !important;
+}
+
+.react-flow__controls-button:hover {
+  background: #1E293B !important;
+  color: #38BDF8 !important;
+  fill: #38BDF8 !important;
+}
+
+.react-flow__minimap {
+  background-color: #162032 !important;
+  border: 1px solid #334155 !important;
+  border-radius: 8px !important;
+}
+
+/* Smooth Glow animations */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px -3px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 30px 2px rgba(239, 68, 68, 0.7);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}

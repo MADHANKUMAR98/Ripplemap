@@ -1,0 +1,29 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.env
+!.env.example
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+.streamlit/
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Node & Frontend Build
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+build/
+*.tsbuildinfo
+.playwright/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
