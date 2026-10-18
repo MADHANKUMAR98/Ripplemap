@@ -3,7 +3,7 @@
 > **Deterministic Cascading Dependency Analysis • RippleScore Risk Ranking • Grounded Recovery Optimizer**  
 > *Submission for WeMakeDevs × FalkorDB Graph Hacks — Track 01: Agents That Act on Connected Data*
 
-RippleMap is an infrastructure intelligence platform built natively on **FalkorDB** property graphs, deterministic impact propagation, and explainable multi-sector cascade analysis. It equips municipal dispatchers, utility coordinators, and emergency managers to simulate infrastructure component failures (e.g., electrical substations, water treatment pumps, telecom spine masts), trace multi-hop failure paths in real time, compute transparent mathematical vulnerability scores, and evaluate optimal recovery strategies without modifying production infrastructure.
+RippleMap is an infrastructure intelligence prototype built natively on **FalkorDB** property graphs, deterministic impact propagation, and explainable multi-sector cascade analysis on synthetic municipal data. It equips simulated dispatchers, utility coordinators, and emergency planners to explore synthetic infrastructure component failures (e.g., electrical substations, water treatment pumps, telecom spine masts), trace multi-hop failure paths in real time, compute transparent mathematical vulnerability scores, and evaluate candidate recovery strategies without modifying graph state.
 
 ---
 
@@ -27,7 +27,7 @@ FalkorDB is not a secondary cache or an afterthought in RippleMap; **it is the a
 1. **Fast Bounded Graph Traversals:** FalkorDB's GraphBLAS sparse matrix linear algebra and in-memory execution engine traverse variable-length physical paths (`*1..4` hops) in single-digit to low double-digit milliseconds (3.3 ms min, 11.0 ms mean in local benchmarks).
 2. **Deterministic Impact Propagation:** Rather than relying on non-deterministic LLM reasoning which can hallucinate or omit critical dependencies, cascade blast radiuses are derived mathematically from physical dependency relationships (`SUPPLIES_POWER_TO`, `SUPPLIES_WATER_TO`, `SUPPORTS_COMMUNICATION_FOR`, `CONNECTS_TO`).
 3. **Alternate Supply Route Discovery:** Cypher pattern matching instantaneously discovers isolated upstream backup lines and bypass switches, validating whether alternate routes can energize affected assets.
-4. **Graph-Backed Incident Memory:** FalkorDB persistently stores historical incident nodes (`:Incident`), execution logs (`:RecoveryAction`), and structural evidence (`:EvidenceRecord`), allowing autonomous agents to ground recommendations in historical operational precedents.
+4. **Graph-Backed Incident Memory:** FalkorDB persistently stores simulated incident nodes (`:Incident`), execution logs (`:RecoveryAction`), and structural evidence (`:EvidenceRecord`), allowing autonomous agents to ground recommendations in simulated incident records and benchmark recovery patterns.
 
 ---
 
@@ -53,9 +53,70 @@ graph TD
 
 ---
 
+## Application Screenshots
+
+These screenshots from the running local application demonstrate RippleMap's core operational capabilities, including graph-based dependency analysis, explainable risk ranking, evidence paths, and simulation-based recovery planning evaluated on synthetic municipal infrastructure data:
+
+### Executive Incident Summary
+![RippleMap Executive Incident Summary](docs/screenshots/executive-summary.png)
+
+### Explainable RippleScore
+![RippleScore Risk Analysis](docs/screenshots/ripplescore-analysis.png)
+
+### Infrastructure Dependency Graph
+![RippleMap FalkorDB Dependency Graph](docs/screenshots/dependency-graph.png)
+
+### Recovery Decision Studio
+![Recovery Plan Comparison](docs/screenshots/recovery-decision-studio.png)
+
+### Evidence Explorer
+![Infrastructure Evidence Explorer](docs/screenshots/evidence-explorer.png)
+
+---
+
 ## 📊 Graph Data Model & Schema
 
 The Ripple City synthetic municipal infrastructure topology models cross-sector dependencies across **5 critical sectors**: **Power, Water, Healthcare, Telecom, and Transportation**.
+
+```mermaid
+graph LR
+    subgraph Physical Infrastructure [Synthetic Infrastructure Graph - 56 Nodes]
+        SUB[":Substation<br/>Power"]
+        PUMP[":WaterPump<br/>Water"]
+        TOWER[":MobileTower<br/>Telecom"]
+        HOSP[":Hospital<br/>Healthcare"]
+        CLINIC[":Clinic<br/>Healthcare"]
+        EMERG[":EmergencyCenter<br/>Public Safety"]
+        ROAD[":Road<br/>Transport"]
+        GEN[":BackupGenerator<br/>Standby Power"]
+        ZONE[":InfrastructureZone<br/>Municipal Area"]
+    end
+
+    subgraph Incident Memory [Incident Memory Subgraph - 3 Nodes]
+        INC[":Incident"]
+        ACT[":RecoveryAction"]
+        EVD[":EvidenceRecord"]
+    end
+
+    SUB -->|SUPPLIES_POWER_TO| PUMP
+    SUB -->|SUPPLIES_POWER_TO| TOWER
+    SUB -->|SUPPLIES_POWER_TO| HOSP
+    SUB -->|SUPPLIES_POWER_TO| EMERG
+    PUMP -->|SUPPLIES_WATER_TO| HOSP
+    PUMP -->|SUPPLIES_WATER_TO| CLINIC
+    TOWER -->|SUPPORTS_COMMUNICATION_FOR| EMERG
+    ROAD -->|CONNECTS_TO| HOSP
+    GEN -->|HAS_BACKUP| SUB
+    GEN -->|HAS_BACKUP| HOSP
+    SUB -.->|LOCATED_IN| ZONE
+    HOSP -.->|LOCATED_IN| ZONE
+
+    INC -->|TRIGGERED_BY| SUB
+    INC -->|AFFECTED| HOSP
+    INC -->|USED_ACTION| ACT
+    ACT -->|TARGETS| SUB
+    INC -->|SUPPORTED_BY| EVD
+```
 
 ### Node Labels
 - `:InfrastructureNode` — Base label for all physical and administrative entities (56 nodes total):
@@ -68,9 +129,9 @@ The Ripple City synthetic municipal infrastructure topology models cross-sector 
   - `:Road` (9 nodes) — Primary transport corridors, bridges, and access arteries.
   - `:BackupGenerator` (7 nodes) — Standby diesel generators with fuel duration constraints.
   - `:InfrastructureZone` (5 nodes) — Geographic municipal districts (Downtown, North River, Eastside, West Hills, Harbor).
-- `:Incident` (1 baseline node) — Historical failure records and benchmarks.
+- `:Incident` (1 baseline node) — Simulated failure records and benchmarks.
 - `:RecoveryAction` (1 baseline node) — Executed or proposed mitigation procedures.
-- `:EvidenceRecord` (1 baseline node) — Verified multi-hop causal chains.
+- `:EvidenceRecord` (1 baseline node) — Modeled multi-hop causal chains.
 
 ### Relationship Types (135 Relationships)
 - Physical Dependencies:
@@ -86,7 +147,7 @@ The Ripple City synthetic municipal infrastructure topology models cross-sector 
   - `[:AFFECTED]` — Links incident to downstream degraded assets.
   - `[:USED_ACTION]` — Links incident to recovery actions taken.
   - `[:TARGETS]` — Directs recovery action toward target asset.
-  - `[:SUPPORTED_BY]` — Attaches verified multi-hop graph evidence.
+  - `[:SUPPORTED_BY]` — Attaches modeled multi-hop graph evidence.
 
 ---
 
@@ -133,7 +194,7 @@ RETURN inc.id, inc.title, inc.timestamp, inc.failure_source, inc.severity, inc.s
        evd.path_summary
 ```
 - **Parameters:** `$source_id` (e.g. `"SUB-001"`).
-- **Agent Usage:** Grounds recovery recommendations in documented operational benchmarks, avoiding repeating past failed strategies.
+- **Agent Usage:** Grounds recovery recommendations in documented simulation benchmarks, avoiding repeating previously recorded ineffective strategies.
 
 ---
 
@@ -167,8 +228,8 @@ The recovery optimizer evaluates candidate action packages (repairs, alternate s
 - *Benchmark for `PLAN-ACT-ACT-001`:*
   $$\text{Score} = (30 \times 6) + (10 \times 8) - (3 \times 6.0) = 180 + 80 - 18 = \mathbf{242.0}\text{ points (6.0 hrs, 0 residual critical risk)}$$
 
-### Verified Evaluated Recovery Plans for `SUB-001` Incident
-The optimizer generates and compares candidate interventions, clearly distinguishing full restoration from fast interim mitigations:
+### Evaluated Recovery Plans for Simulated `SUB-001` Incident
+The optimizer generates and compares candidate interventions for the simulated `SUB-001` scenario, clearly distinguishing full restoration from fast interim mitigations:
 - **Rank 1 — `PLAN-ACT-ACT-001` (Top Recommendation):**
   - **Score:** 242.0 pts | **Duration:** 6.0 hrs | **Critical Services Protected:** 6 / 6 | **Fully Protected Assets:** 8 (`EMERG-001`, `PUMP-001`, `ROAD-001`, `HOSP-001`, `TOWER-001`, `HOSP-002`, `CLINIC-001`, `PUMP-002`) | **Residual Critical Risk:** 0
   - **Action:** Full hardware repair and re-energization of Metro Central Substation (`ACT-001`).
@@ -288,6 +349,7 @@ node qa_runner.cjs
 
 ## 🔒 Simulation Disclaimers & Safety Guarantees
 
+- **Prototype & Synthetic Data Scope:** RippleMap is a research and decision-support prototype evaluated on synthetic municipal topology. It does not perform live telemetry ingestion, real-world outage detection, or guaranteed optimal field dispatch.
 - **Zero Database Mutation During Investigation:** Exploring incidents or testing recovery plans in the UI never mutates node operational statuses or graph structure (`persist_memory=False` by default).
 - **Truthful Outcome Classifications:** Historical baseline incidents are explicitly tagged as `RECORDED_SIMULATION_BENCHMARK`. No simulated recovery plan is ever presented as a confirmed real-world field outcome.
 - **Human-in-the-Loop Requirement:** RippleMap is an operational decision-support tool. Recommended recovery actions must be reviewed and authorized by licensed utility dispatchers and qualified field engineers before executing physical switchgear or valve modifications.
@@ -306,7 +368,6 @@ node qa_runner.cjs
 
 - **Public GitHub Repository:** [https://github.com/MADHANKUMAR98/Ripplemap](https://github.com/MADHANKUMAR98/Ripplemap)
 - **Hackathon Track:** WeMakeDevs × FalkorDB Graph Hacks — Track 01: Agents That Act on Connected Data
-- **Demo Video:** `[Demo Video Link - Placeholder - 2:45 min walkthrough to be recorded]`
-- **Live Deployment:** `[Deployment Link - Local Execution Recommended (₹0 Hosting Budget)]`  
-  *(Per Hackathon Rule 6, complete reproducible local Docker + React + FastAPI setup is provided to ensure full data privacy and zero hosting costs).*
+- **Demo Video:** [Google Drive Video Walkthrough](https://drive.google.com/file/d/1NpDFxcTiAtzh_4fR6NKOCGgT2g-l0WGl/view?usp=sharing)
+- **Live Deployment:** None provided (Local execution recommended). Per Hackathon guidelines and zero-cost hosting constraints, RippleMap is fully reproducible locally using the provided Docker (FalkorDB), FastAPI backend, and React/Vite frontend setup. No external cloud deployment is hosted.
 
