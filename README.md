@@ -20,6 +20,20 @@ Modern municipal utilities operate as deeply interconnected cyber-physical syste
 
 ---
 
+## 🎥 Demo Video
+
+**Demo Video:** [Watch the complete RippleMap walkthrough](https://drive.google.com/file/d/1xa01Oa2g8nCI8RhqrPKPlJt-VkYBd55Y/view?usp=sharing)
+
+The demonstration video walks through RippleMap's complete end-to-end workflow:
+- **Dependency Graph Investigation:** Simulating multi-hop cascading failures from root infrastructure components.
+- **Evidence Explorer:** Inspecting affected asset classifications, contingency information, and deterministic Cypher traversal paths.
+- **RippleScore Analysis:** Decomposing transparent vulnerability scores across physical risk factors and redundancy credits.
+- **Recovery Plan Comparison:** Pareto evaluation of restoration interventions balancing protected critical services against execution duration.
+- **AI Explanation & Q&A:** Grounded operational inquiry powered by FalkorDB facts with optional Groq LLM narrative synthesis.
+- **Incident Memory:** Graph-backed historical benchmark retrieval and recovery precedence grounding.
+
+---
+
 ## ⚡ Why FalkorDB is Central to RippleMap
 
 FalkorDB is not a secondary cache or an afterthought in RippleMap; **it is the authoritative single source of truth for the entire intelligence pipeline**:
@@ -368,6 +382,6 @@ node qa_runner.cjs
 
 - **Public GitHub Repository:** [https://github.com/MADHANKUMAR98/Ripplemap](https://github.com/MADHANKUMAR98/Ripplemap)
 - **Hackathon Track:** WeMakeDevs × FalkorDB Graph Hacks — Track 01: Agents That Act on Connected Data
-- **Demo Video:** [Google Drive Video Walkthrough](https://drive.google.com/file/d/1NpDFxcTiAtzh_4fR6NKOCGgT2g-l0WGl/view?usp=sharing)
+- **Demo Video:** [Watch the complete RippleMap walkthrough](https://drive.google.com/file/d/1xa01Oa2g8nCI8RhqrPKPlJt-VkYBd55Y/view?usp=sharing)
 - **Live Deployment:** None provided (Local execution recommended). Per Hackathon guidelines and zero-cost hosting constraints, RippleMap is fully reproducible locally using the provided Docker (FalkorDB), FastAPI backend, and React/Vite frontend setup. No external cloud deployment is hosted.
 
